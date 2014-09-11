@@ -18,7 +18,9 @@
                        b (first seq2)]
                    (cond
                      (and (nil? a) (nil? b)) true
-                     (= a b) (recur (rest seq1) (rest seq2))
+                     (nil? a) false
+                     (nil? b) false
+                     (== a b) (recur (rest seq1) (rest seq2))
                      :else false)))]
     (helper seq1 seq2)))
 
@@ -53,7 +55,12 @@
                  
 
 (defn fast-fibo [n]
-  ":(")
+  (loop [f-n1 1
+         f-n0 0
+         cur n]
+    (if (zero? cur)
+      f-n0
+      (recur (+ f-n1 f-n0) f-n1 (dec cur)))))
 
 (defn cut-at-repetition [a-seq]
   [":("])
