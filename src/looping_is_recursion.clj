@@ -15,13 +15,14 @@
 (defn seq= [seq1 seq2]
   (let [helper (fn [seq1 seq2]
                  (let [a (first seq1)
-                       b (first seq2)]
+                       b (first seq2)
+                       e1 (empty? seq1)
+                       e2 (empty? seq2)]
                    (cond
-                     (and (nil? a) (nil? b)) true
-                     (nil? a) false
-                     (nil? b) false
-                     (== a b) (recur (rest seq1) (rest seq2))
-                     :else false)))]
+                     (and e1 e2) true
+                     (or e1 e2) false
+                     (not= a b) false
+                     :else (recur (rest seq1) (rest seq2)))))]
     (helper seq1 seq2)))
 
 (defn find-first-index [pred a-seq]
@@ -63,5 +64,12 @@
       (recur (+ f-n1 f-n0) f-n1 (dec cur)))))
 
 (defn cut-at-repetition [a-seq]
-  [":("])
+  (loop [res-seq (empty seq)
+         inp-seq a-seq
+         key-set #{}]
+    (let [a (first inp-seq)
+          s (rest inp-seq)]
+      (if (or (empty? inp-seq) (contains? key-set a))
+        (reverse res-seq)
+        (recur (conj res-seq a) s (conj key-set a))))))
 
